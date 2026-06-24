@@ -158,7 +158,6 @@ const cardData = [
 
 const grid = document.querySelector("#card-grid");
 const drawButton = document.querySelector("#draw-button");
-const drawStatus = document.querySelector("#draw-status");
 const stageSummary = document.querySelector("#stage-summary");
 const roundCounter = document.querySelector("#round-counter");
 
@@ -187,8 +186,7 @@ const renderCardBack = (category) => `
   <article class="card card-back" style="background: ${category.backStyle}" aria-label="Balíček ${category.name}">
     <div class="card-back__top">
       <p class="card-back__label">Balíček</p>
-      <h3 class="card-back__name">${category.name}</h3>
-      <p class="card-back__instruction">${category.instruction}</p>
+      <p class="card-back__ready">Připraveno</p>
     </div>
     <p class="card-back__count">${category.cards.length} karet</p>
   </article>
@@ -200,29 +198,44 @@ const renderCardFace = ({ category, card }) => `
       <img class="card-face__image" src="${card.image}" alt="Ilustrace pro kartu ${card.title}">
     </div>
     <div class="card-face__content">
-      <span class="card-face__category">${category.name}</span>
-      <h3 class="card-face__title">${card.title}</h3>
+      <span class="card-face__title">${card.title}</span>
       <p class="card-face__text">${card.text}</p>
     </div>
   </button>
 `;
 
+const renderCategorySlot = ({ category, card = null }) => `
+  <section class="category-slot" data-category-id="${category.id}" style="--accent: ${category.accent}" aria-label="${category.name}">
+    <h3 class="category-slot__title">${category.name}</h3>
+    ${card ? renderCardFace({ category, card }) : renderCardBack(category)}
+    <p class="category-slot__instruction">${category.instruction}</p>
+  </section>
+`;
+
 const renderBoard = (drawnCards = null) => {
   grid.innerHTML = drawnCards
-    ? drawnCards.map(renderCardFace).join("")
-    : cardData.map(renderCardBack).join("");
+    ? drawnCards.map(renderCategorySlot).join("")
+    : cardData.map((category) => renderCategorySlot({ category })).join("");
 };
 
 const updateSummary = (drawnCards = null) => {
   if (!drawnCards) {
     stageSummary.textContent = "Každý balíček má vlastní sadu ukázkových karet.";
-    drawStatus.textContent = "Balíčky jsou připravené.";
     return;
   }
 
   const titles = drawnCards.map(({ card }) => card.title).join(", ");
   stageSummary.textContent = `Aktuální výsledek: ${titles}.`;
-  drawStatus.textContent = `Vylosováno ${drawnCards.length} karet z kompletních balíčků.`;
+};
+
+const replaceSingleCard = ({ category, card }) => {
+  const categorySlot = grid.querySelector(
+    `.category-slot[data-category-id="${category.id}"]`
+  );
+  const currentCard = categorySlot?.querySelector(".card-face-button");
+  if (!currentCard) return;
+
+  currentCard.outerHTML = renderCardFace({ category, card });
 };
 
 drawButton.addEventListener("click", () => {
@@ -247,9 +260,8 @@ grid.addEventListener("click", (event) => {
     card: drawOneCard(category),
   };
 
-  renderBoard(currentDraw);
+  replaceSingleCard(currentDraw[drawIndex]);
   updateSummary(currentDraw);
-  drawStatus.textContent = `Přelosována karta z balíčku ${category.name}.`;
 });
 
 renderBoard();
