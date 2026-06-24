@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Generátor kreativity</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <h1>Generátor kreativity</h1>
+          <p class="intro">
+            Pět tematických balíčků, jedno kliknutí a z každé kategorie jedna
+            náhodně vybraná karta.
+          </p>
+        </div>
+
+        <div class="draw-panel" aria-label="Ovládání losování">
+          <button class="draw-button" id="draw-button" type="button">
+            <span class="draw-button__icon" aria-hidden="true">↻</span>
+            Vylosovat karty
+          </button>
+          <p class="draw-status" id="draw-status" aria-live="polite">
+            Balíčky jsou připravené.
+          </p>
+        </div>
+      </header>
+
+      <section class="cards-stage" aria-labelledby="stage-title">
+        <div class="stage-heading">
+          <div>
+            <h2 id="stage-title">Kategorie</h2>
+            <p id="stage-summary">Každý balíček má vlastní sadu ukázkových karet.</p>
+          </div>
+          <p class="round-counter" id="round-counter">Kolo 0</p>
+        </div>
+
+        <div class="card-grid" id="card-grid"></div>
+      </section>
+
+      <footer class="app-footer">
+        <p class="app-footer__note">
+          Tento digitální artefakt vznikl v rámci workshopu na
+          Letní&nbsp;škole&nbsp;KISKu&nbsp;2026
+        </p>
+        <p class="app-footer__credits">
+          <span>Tvořili</span>
+          Lucka, Šárka, Vojta, Verča, Káťa, Kiki, Anna, Terka, Gabi, Bea a Radek
+        </p>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
